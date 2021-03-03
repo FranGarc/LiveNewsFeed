@@ -7,4 +7,7 @@
     <string name="published_at">PUBLISHED AT</string>
     <string name="hint_search">Search…</string>
     <string name="article_picture_description">Picture that came with the article</string>
+    <string name="menu_search_news">Search News</string>
+    <string name="menu_saved_news">Saved News</string>
+    <string name="menu_breaking_news">Breaking News</string>
 </resources>
