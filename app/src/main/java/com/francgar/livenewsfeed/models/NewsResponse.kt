@@ -1,4 +1,4 @@
-package com.francgar.livenewsfeed
+package com.francgar.livenewsfeed.models
 
 data class NewsResponse(
     val articles: List<Article>,

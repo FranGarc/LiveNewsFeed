@@ -1,6 +1,6 @@
 package com.francgar.livenewsfeed.api
 
-import com.francgar.livenewsfeed.NewsResponse
+import com.francgar.livenewsfeed.models.NewsResponse
 import com.francgar.livenewsfeed.util.Constants.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
