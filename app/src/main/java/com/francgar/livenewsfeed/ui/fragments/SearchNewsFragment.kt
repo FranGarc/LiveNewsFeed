@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.francgar.livenewsfeed.R
 import com.francgar.livenewsfeed.adapters.NewsAdapter
@@ -25,6 +26,18 @@ class SearchNewsFragment : NewsBaseFragment(R.layout.fragment_search_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+
+        newsAdapter.setOnItemClickListener { article ->
+            CLog.v("BreakingNewsFragment.onItemClickListener(article: $article)")
+
+            val bundle = Bundle()
+            bundle.apply {
+                putSerializable("article", article)
+            }
+            findNavController().navigate(R.id.action_searchNewsFragment_to_articleFragment, bundle)
+        }
+
+
         viewModel = (activity as NewsActivity).viewModel
 
         var job: Job? = null
