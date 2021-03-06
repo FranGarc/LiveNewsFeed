@@ -12,4 +12,14 @@ abstract class NewsBaseFragment(layout: Int) : Fragment(layout) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as NewsActivity).viewModel
     }
+
+    fun hideProgressBar(progressBar: View) {
+        progressBar.visibility = View.INVISIBLE
+    }
+
+    fun showProgressBar(progressBar: View) {
+        progressBar.visibility = View.VISIBLE
+    }
+
+
 }
