@@ -2,13 +2,15 @@ package com.francgar.livenewsfeed.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.francgar.livenewsfeed.R
 import com.francgar.livenewsfeed.adapters.NewsAdapter
 import com.francgar.livenewsfeed.util.CLog
-import com.francgar.livenewsfeed.util.Resource
-
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_saved_news.*
 
 class SavedNewsFragment : NewsBaseFragment(R.layout.fragment_saved_news) {
@@ -22,28 +24,39 @@ class SavedNewsFragment : NewsBaseFragment(R.layout.fragment_saved_news) {
             bundle.apply {
                 putSerializable("article", article)
             }
-            findNavController().navigate(R.id.action_breakingNewsFragment_to_articleFragment, bundle)
+            findNavController().navigate(R.id.action_savedNewsFragment_to_articleFragment, bundle)
         }
 
 
-        viewModel.breakingNews.observe(viewLifecycleOwner, { response ->
-            when (response) {
-                is Resource.Success -> {
-//                    hideProgressBar(paginationProgressBar)
-                    response.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles)
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val article = newsAdapter.differ.currentList[position]
+                viewModel.deleteArticle(article)
+                Snackbar.make(view, "Successfully deleted article", Snackbar.LENGTH_LONG).apply {
+                    setAction("Undo") {
+                        viewModel.saveArticle(article)
                     }
-                }
-                is Resource.Error -> {
-//                    hideProgressBar(paginationProgressBar)
-                    response.message?.let {
-                        CLog.e(it, Exception(it))
-                    }
-                }
-                is Resource.Loading -> {
-//                    showProgressBar(paginationProgressBar)
+                    show()
                 }
             }
+        }
+
+        ItemTouchHelper(itemTouchHelperCallback).apply {
+            attachToRecyclerView(rvSavedNews)
+        }
+
+
+        viewModel.getSavedNews().observe(viewLifecycleOwner, Observer { articles ->
+            newsAdapter.differ.submitList(articles)
+
         })
     }
 

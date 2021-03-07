@@ -5,6 +5,8 @@ import com.francgar.livenewsfeed.models.Source
 
 
 class Converters {
+
+
     @TypeConverter
     fun fromSource(source: Source): String {
         return source.name
