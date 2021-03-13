@@ -3,6 +3,7 @@ package com.francgar.livenewsfeed.ui.fragments
 import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -76,8 +77,9 @@ class SearchNewsFragment : NewsBaseFragment(R.layout.fragment_search_news) {
                 }
                 is Resource.Error -> {
                     hideProgressBar(paginationProgressBar)
-                    response.message?.let {
-                        CLog.e(it, Exception(it))
+                    response.message?.let { message ->
+                        Toast.makeText(activity, "An error occurred: $message", Toast.LENGTH_LONG).show()
+                        CLog.e(message, Exception(message))
                     }
                 }
                 is Resource.Loading -> {
