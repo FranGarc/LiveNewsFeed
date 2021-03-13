@@ -13,12 +13,18 @@ abstract class NewsBaseFragment(layout: Int) : Fragment(layout) {
         viewModel = (activity as NewsActivity).viewModel
     }
 
+    var isLoading = false
+    var isLastPage = false
+    var isScrolling = false
+
     fun hideProgressBar(progressBar: View) {
         progressBar.visibility = View.INVISIBLE
+        isLoading = false
     }
 
     fun showProgressBar(progressBar: View) {
         progressBar.visibility = View.VISIBLE
+        isLoading = true
     }
 
 
