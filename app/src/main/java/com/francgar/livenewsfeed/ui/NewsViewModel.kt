@@ -13,6 +13,7 @@ import com.francgar.livenewsfeed.LiveNewsFeedApplication
 import com.francgar.livenewsfeed.models.Article
 import com.francgar.livenewsfeed.models.NewsResponse
 import com.francgar.livenewsfeed.repository.NewsRepository
+import com.francgar.livenewsfeed.util.CLog
 import com.francgar.livenewsfeed.util.Constants.COUNTRY_CODE
 import com.francgar.livenewsfeed.util.Resource
 import kotlinx.coroutines.launch
@@ -110,8 +111,9 @@ class NewsViewModel(
     private suspend fun safeBreakingNewsCall(countryCode: String) {
         breakingNews.postValue(Resource.Loading())
         try {
-
-            if (hasInternetConnection()) {
+            val hasInternetConnection = hasInternetConnection()
+            CLog.d("NewsViewModel.safeBreakingNewsCall(countryCode: $countryCode) hasInternetConnection: $hasInternetConnection")
+            if (hasInternetConnection) {
                 val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
                 breakingNews.postValue(handleBreakingNewsResponse(response))
             } else {
@@ -126,6 +128,7 @@ class NewsViewModel(
     }
 
 
+    @Suppress("DEPRECATION")
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<LiveNewsFeedApplication>().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
